@@ -2,16 +2,40 @@ from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 from datetime import date, timedelta
 import time
+import json
+import jsonlines
 
-carList = ['', 'Camry 2019', 'Camry 2010', 'Lexus', 'Minivan']
+#switch-statement function
+'''
+carList = {
+	1: 'Camry 2019',
+	2: 'Camry 2010',
+	3: 'Lexus',
+	4: 'Minivan'
+}
+'''
+# TODO finish adding in dictionaries by line
+with jsonlines.open('cars.json') as f:
+	for item in f:
+		print(item["1"])
+
+print(carList)
+#print(carList[2])
+
+#with open('cars.json', 'r') as f:
+#	carList = json.load(line)
+#	f.write("\n")
+
 print("Welcome to amoshet's Permit Parking Script!")
 print("Which car would you like to register for street parking?")
 
-#prints list of cars
-for i in range(1, len(carList)):
-	print(str(i) + ". " + carList[i])
+#prints list of available cars
+count = 1
+for i in range(len(carList)):
+	print(str(count) + ". " + carList[count])
+	count += 1
 
-print("5. Add Car")
+print(str(count) + ". Add New Car")
 
 #asks user to select car
 car = int(input("Please select car by number: "))
@@ -22,11 +46,20 @@ num = "2015558888"
 
 addr = "201 YourStreet Street"
 #changes car, car color, and license plate based on number selected (this is sample info)
-if (car == carList.index('Camry 2019')):
+
+if (carList[car] == "Camry 2019"):
 	car = "Toyota Camry"
 	carColor = "Silver"
 	licensePlate = "N80AVG"
-	
+	Camry2019 = {
+		"car": car,
+		"carColor": carColor,
+		"licensePlate": licensePlate
+	}
+	with open('cars.json', 'a') as w:
+		json.dump(Camry2019, w)
+		w.write("\n")
+'''	
 if (car == carList.index('Camry 2010')):
 	car = "Toyota Camry"
 	carColor = "Grey"
@@ -41,11 +74,13 @@ if (car == carList.index('Minivan')):
 	car = "Honda Odyssey"
 	carColor = "Grey"
 	licensePlate = "KGCD0Z"
-	
-if (car == 5):
+'''	
+if (car == count):
 	car = input("What is your car's Make and Model? (Ex: Toyota Corolla): ")
 	carColor = input("What color is your car? (Ex: Red): " )
 	licensePlate = input("And what is your license plate? (Ex: LBJ3M7): " )
+	
+	carList(car) 
 
 #splits phone number for form
 ph1 = num[:3]
@@ -85,8 +120,8 @@ for i in range(len(elem)):
 	elem[i].send_keys(info[i])
 
 #submits form after 3 seconds and closes page
-time.sleep(3)
-submitForm = browser.find_element_by_class_name('button')
-submitForm.submit()
-time.sleep(3)
-browser.quit()
+#time.sleep(3)
+#submitForm = browser.find_element_by_class_name('button')
+#submitForm.submit()
+#time.sleep(3)
+#browser.quit()
